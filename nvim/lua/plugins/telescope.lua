@@ -18,16 +18,6 @@ return {
       vim.keymap.set("n", "<Leader>td", builtin.diagnostics, {})
 
       telescope.load_extension("live_grep_args")
-
-      vim.api.nvim_create_autocmd("VimEnter", {
-        callback = function()
-          local args = vim.fn.argv()
-          if #args == 0 then
-            -- No files or arguments passed, launch find_files
-            require("telescope.builtin").find_files()
-          end
-        end,
-      })
     end,
   },
   {

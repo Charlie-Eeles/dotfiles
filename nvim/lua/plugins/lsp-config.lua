@@ -20,6 +20,8 @@ return {
           "rust_analyzer",
           "tflint",
           "pyright",
+          "eslint",
+          "vue_ls",
         },
       })
     end,
@@ -36,8 +38,7 @@ return {
         },
         config = function()
           local actions = require("nvim-navbuddy.actions")
-          local navbuddy = require("nvim-navbuddy")
-          navbuddy.setup({
+          require("nvim-navbuddy").setup({
             window = {
               size = "50%",
               position = "100%"
@@ -52,11 +53,12 @@ return {
       }
     },
     opts = {
-      inlay_hints = { enabled = true },
+      -- inlay_hints = { enabled = true },
     },
     config = function()
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
       local lspconfig = require("lspconfig")
+      local util = require("lspconfig.util")
 
       lspconfig.bashls.setup({ capabilities = capabilities })
       lspconfig.jsonls.setup({ capabilities = capabilities })
@@ -67,16 +69,7 @@ return {
       lspconfig.rust_analyzer.setup({ capabilities = capabilities })
       lspconfig.tflint.setup({ capabilities = capabilities })
       lspconfig.pyright.setup({ capabilities = capabilities })
-
-      lspconfig.volar.setup({
-        filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue", "json" },
-        init_options = {
-          vue = {
-            hybridMode = false,
-          },
-        },
-        capabilities = capabilities,
-      })
+      lspconfig.eslint.setup({ capabilities = capabilities })
 
       lspconfig.ts_ls.setup({
         init_options = {
@@ -84,16 +77,20 @@ return {
             {
               name = "@vue/typescript-plugin",
               location = vim.fn.stdpath("data")
-                  .. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
+                .. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
               languages = { "vue" },
             },
           },
         },
+        filetypes = {
+          "javascript",
+          "javascriptreact",
+          "typescript",
+          "typescriptreact",
+          "vue",
+        },
         settings = {
           typescript = {
-            tsserver = {
-              useSyntaxServer = false,
-            },
             inlayHints = {
               includeInlayParameterNameHints = "all",
               includeInlayParameterNameHintsWhenArgumentMatchesName = true,
@@ -103,6 +100,9 @@ return {
               includeInlayPropertyDeclarationTypeHints = true,
               includeInlayFunctionLikeReturnTypeHints = true,
               includeInlayEnumMemberValueHints = true,
+            },
+            tsserver = {
+              useSyntaxServer = false,
             },
           },
         },
